@@ -1,65 +1,132 @@
 @charset "UTF-8";
+
 html {
-width: 80%;
-margin-right: auto;
-margin-left: auto;
-font-family: sans-serif;
-font-size: 16px;
-line-height: 1.5;
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    font-family: sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
 }
-input,button,select,optgroup,textarea {
-font-family: inherit;
-font-size: inherit;
-line-height: inherit;
-}
-button {
-cursor: pointer;
-padding: 6px 12px;
-border-radius: 6px;
-color: #fff;
-border: 2px;
-/* background-color: #007bff; */
-transition: background-color .2s
-}
-button:hover {
-/* background-color: #0069d9; */
-}
-button:active {
-/* background-color: #003c7c; */
-}
-button:disabled {
-opacity: .5;
-pointer-events: none;
-}
-input {
-padding: 6px 12px;
-border-radius: 6px;
-color: #495057;
-border: 2px solid #ced4da;
-}
+
+input,
+button,
+select,
+optgroup,
 textarea {
-width: 500px;
-height: 200px;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
 }
+
+button {
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #fff;
+    border: 2px;
+    /* background-color: #007bff; */
+    transition: background-color .2s
+}
+
+button:hover {
+    /* background-color: #0069d9; */
+}
+
+button:active {
+    /* background-color: #003c7c; */
+}
+
+button:disabled {
+    opacity: .5;
+    pointer-events: none;
+}
+
+input {
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #495057;
+    border: 2px solid #ced4da;
+}
+
+textarea {
+    width: 500px;
+    height: 200px;
+}
+
 select {
-border: 2px solid #ced4da;
+    border: 2px solid #ced4da;
 }
+
 /* */
-li{
+li {
     list-style: none;
 }
-.complete{
+
+.complete {
     text-decoration: line-through;
-    color:gray;
+    color: gray;
     display: inline;
 }
-.NotComp{
+
+.NotComp {
     display: inline;
 }
-.v-enter-active,.v-leave-active{
+
+.v-enter-active,
+.v-leave-active {
     transition: 0.5s;
 }
-.v-enter,.v-leave-to{
+
+.v-enter,
+.v-leave-to {
     opacity: 0;
     transform: translateX(20px);
+}
+
+SSCSS .tooltip {
+    /* 補足説明するテキストのスタイル */
+    position: relative;
+    cursor: pointer;
+    padding: 0 5px;
+    font-size: 0.9em;
+    color: #4682b4;
+}
+
+.description_top {
+    /* ツールチップのスタイル */
+    width: 130  px;
+    /* 横幅 */
+    position: absolute;
+    left: 50%;
+    bottom: 80%;
+    /* Y軸の位置 */
+    transform: translateY(80%);
+    /* transform: translateX(30%); */
+    margin-bottom: 8px;
+    /* テキストとの距離 */
+    padding: 8px;
+    border-radius: 10px;
+    /* 角の丸み */
+    background-color: #666;
+    font-size: 0.7em;
+    color: #fff;
+    text-align: center;
+    visibility: hidden;
+    /* ツールチップを非表示に */
+    opacity: 0;
+    /* 不透明度を0％に */
+    z-index: 1;
+    transition: 0.5s all;
+    /* マウスオーバー時のアニメーション速度 */
+}
+
+.tooltip:hover .description_top {
+    /* マウスオーバー時のスタイル */
+    bottom: 100%;
+    /* Y軸の位置 */
+    visibility: visible;
+    /* ツールチップを表示 */
+    opacity: 1;
+    /* 不透明度を100％に */
 }
