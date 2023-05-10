@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <link href="../static/css/style.css" rel="stylesheet">
+
+    <title>todo</title>
+</head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <v-card max-width="500">
+                <v-toolbar color="pink" dark>
+                    <v-app-bar-nav-icon></v-app-bar-nav-icon>
+
+                    <v-toolbar-title>Inbox</v-toolbar-title>
+
+                    <v-spacer></v-spacer>
+
+                    <v-btn icon>
+                        <v-icon>mdi-magnify</v-icon>
+                    </v-btn>
+
+                    <v-btn icon>
+                        <v-icon>mdi-checkbox-marked-circle</v-icon>
+                    </v-btn>
+                </v-toolbar>
+
+                <v-list two-line>
+                    <v-list-item-group v-model="selected" active-class="black-text">
+                        <template v-for="(todo, index) in ToDoList">
+                            <v-list-item :key="todo.todo">
+                                <template v-slot:default="{ active }">
+                                    <v-checkbox v-model="todo.check"></v-checkbox>
+                                    <v-list-item-content>
+                                        <v-list-item-title v-text="todo.todo" :class="todo.class"></v-list-item-title>
+                                    </v-list-item-content>
+                                    <v-list-item-action>
+                                        <v-list-item-action-text v-text="todo.important"></v-list-item-action-text>
+                                        <v-icon v-if="!todo.important" color="grey lighten-1"
+                                            @click="todo.important = true">
+                                            mdi-star-outline
+                                        </v-icon>
+                                        <v-icon v-else color="yellow darken-3" @click="todo.important = false">
+                                            mdi-star
+                                        </v-icon>
+                                    </v-list-item-action>
+                                </template>
+                            </v-list-item>
+                            <v-divider v-if="index < ToDoList.length - 1" :key="index"></v-divider>
+                        </template>
+                    </v-list-item-group>
+
+                </v-list>
+            </v-card>
+        </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+
+    <script>
+        new Vue({
+            el: "#app",
+            vuetify: new Vuetify(),
+            data: {
+                ToDoList: [
+                    {
+                        todo: "LUSH",
+                        check: false,
+                        class: "NotComp",
+                        important: false,
+                    },
+                    {
+                        todo: "イハダ",
+                        check: false,
+                        class: "NotComp",
+                        important: false,
+                    }
+                ],
+                inputToDo: "",
+            },
+            methods: {
+                add: function () {
+                    if (this.inputToDo != "") {
+                        this.ToDoList.push({
+                            todo: this.inputToDo,
+                            check: false,
+                            class: "NotComp",
+                            important: false,
+
+                        })
+                        this.inputToDo = ""
+                    }
+                },
+                remove: function (index) {
+                    this.ToDoList.splice(index, 1)
+                },
+                chageClass: function (index) {
+                    if (!this.ToDoList[index].check) {
+                        this.ToDoList[index].class = "complete"
+                    } else {
+                        this.ToDoList[index].class = "NotComp"
+                    }
+                }
+            }
+
+        })
+    </script>
+</body>
+
+</html>
