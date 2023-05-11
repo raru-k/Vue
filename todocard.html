@@ -32,9 +32,7 @@
                     <v-spacer></v-spacer>
                     <v-btn icon @click="changeVisible">
                         <v-icon v-if="change">mdi-eye</v-icon>
-                        <span class="description_top" v-if="change">すべてのタスクを表示中</span>
                         <v-icon v-else>mdi-eye-off</v-icon>
-                        <span class="description_top" v-else>完了済みタスクを非表示中</span>
                     </v-btn>
 
                     <v-btn icon class="tooltip" @click="showTextBox = !showTextBox">
@@ -49,10 +47,10 @@
                         <template v-for="(todo, index) in ToDoList">
                             <v-list-item :key="todo.todo">
                                 <template v-slot:default="{ active }" v-if="todo.visible">
-                                    <v-checkbox v-model="todo.check" @click.stop="{{check}}"></v-checkbox>
+                                    <v-checkbox v-model="todo.check" @click.stop></v-checkbox>
 
                                     <v-list-item-content @click.stop="">
-                                        <v-list-item-title v-text="todo.todo" ></v-list-item-title>
+                                        <v-list-item-title v-text="todo.todo"></v-list-item-title>
                                     </v-list-item-content>
 
                                     <v-btn icon @click.stop="edit(index)">
@@ -60,8 +58,8 @@
                                     </v-btn>
 
                                     <v-list-item-action>
-                                        <v-icon v-if="!active" color="grey lighten-1" @click>mdi-star-outline</v-icon>
-                                        <v-icon v-else color="yellow darken-3" @click>mdi-star</v-icon>
+                                        <!-- <v-checkbox v-model="active" color="yellow darken-3" :on-icon="'mdi-star'" :off-icon="'mdi-star-outline'" light :off-color="'grey'"></v-checkbox> -->
+                                        <v-checkbox on-icon="mdi-star" off-icon="mdi-star-outline" color="yellow darken-3" v-model="todo.important" light></v-checkbox>
                                     </v-list-item-action>
 
                                 </template>
@@ -93,76 +91,70 @@
                     {
                         todo: "a",
                         check: false,
-                        class: "NotComp",
                         important: false,
                         visible: true,
                     },
                     {
                         todo: "b",
                         check: false,
-                        class: "NotComp",
                         important: false,
-                        visible : true,
+                        visible: true,
                     },
                     {
                         todo: "aaaaaaaaaaaaaaaaaaaa",
                         check: false,
-                        class: "NotComp",
                         important: false,
-                        visible : true,
-
+                        visible: true,
                     }
                 ],
+
                 inputToDo: "",
                 showTextBox: false,
                 visible: true,
                 change: true,
 
             },
-            methods: {
-                add: function () {
-                    if (this.inputToDo != "") {
-                        this.ToDoList.push({
-                            todo: this.inputToDo,
-                            check: false,
-                            class: "NotComp",
-                            important: false,
+        methods: {
+            add: function () {
+                if (this.inputToDo != "") {
+                    this.ToDoList.push({
+                        todo: this.inputToDo,
+                        check: false,
+                        important: false,
+                        visible: true,
 
-                        })
-                        this.inputToDo = "",
-                            this.showTextBox = false
+                    })
+                this.inputToDo = "",
+                this.showTextBox = false;
+                }
+            },
+            remove: function (index) {
+                this.ToDoList.splice(index, 1)
+            },
+            removeAll: function () {
+                for (var i = 0; i < this.ToDoList.length; i++) {
+                    if (this.ToDoList[i].check) {
+                        this.ToDoList.splice(i, 1);
+                        i--;
                     }
-                },
-                remove: function (index) {
-                    this.ToDoList.splice(index, 1)
-                },
-                removeAll: function () {
+                }
+            },
+
+            changeVisible: function () {
+                if (this.change) {
                     for (var i = 0; i < this.ToDoList.length; i++) {
-                        if (this.ToDoList[i].check) {
-                            this.ToDoList.splice(i, 1);
-                            i--;
-                        }
-                    }
-                },
-
-                changeVisible: function () {
-                    if (this.change) {
-                        for (var i = 0; i < this.ToDoList.length; i++) {
                         if (this.ToDoList[i].check) {
                             this.ToDoList[i].visible = false;
                         }
-                        this.change = !this.change;
                     }
-                    }else{
-                        for (var i = 0; i < this.ToDoList.length; i++) {
-                            this.ToDoList[i].visible = true;
-                        }
-                        this.change = !this.change
+                } else {
+                    for (var i = 0; i < this.ToDoList.length; i++) {
+                        this.ToDoList[i].visible = true;
                     }
-
                 }
-
+                this.change = !this.change
             }
+        },
 
         })
     </script>

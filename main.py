@@ -7,26 +7,23 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    ToDoList=[
-        {
-        "todo" : "aaa",
-        "check" : "false",
-        "class" : "NotCom",
-        "important": "false"
-    }]
+    df = pd.read_csv('static/csv/todo.csv', header=None, encoding='utf-8')
+    
+    df.columns = ['todo','check','important','visible']
+    
+    ToDoList = []
+    
+    for i in range(len(df)):
+        ToDoList.append({
+            "todo" : df['todo'][i],
+            "check" : df['check'][i],
+            "important" : df['important'][i],
+            "visible" : df['visible'][i]
+        })
+    
     return render_template('index.html',
                         ToDoList=ToDoList)
 
-@app.route('/todolist')
-def get_todolist():
-    ToDoList=[
-        {
-        "todo" : "aaa",
-        "check" : False,
-        "class" : "NotComp",
-        "important": False
-    }]
-    return jsonify(ToDoList)
 
 
 if __name__ == '__main__':

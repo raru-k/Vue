@@ -63,15 +63,6 @@ li {
     list-style: none;
 }
 
-.complete {
-    text-decoration: line-through;
-    color: gray;
-    display: inline;
-}
-
-.NotComp {
-    display: inline;
-}
 
 .v-enter-active,
 .v-leave-active {

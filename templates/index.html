@@ -16,18 +16,67 @@
 <body>
     <div id="app">
         <v-app>
-            <!-- <todo-list></todo-list> -->
-            <transition-group>
-                <li v-for="(todo, index) in ToDoList" :key="todo.todo">
-                    <label>
-                        <input type="checkbox" value="index" v-model="todo.check" @click="chageClass(index)">
-                        <p :class="todo.class">[[todo.todo]]</p>
-                    </label>
-                        <v-icon @click="remove(index)">mdi-trash-can-outline</v-icon>
-                </li>
-            </transition-group>
-            <input type="text" v-model="inputToDo"  @keyup.enter="add">
+            <v-card class="mx-auto" max-width="500">
+                <v-toolbar color="dark" dark>
+                    <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
+                    <v-toolbar-title>todo</v-toolbar-title>
+
+                    <v-spacer></v-spacer>
+
+                    <v-btn icon class="tooltip" @click="removeAll">
+                        <v-icon>mdi-checkbox-marked-circle</v-icon>
+                        <span class="description_top">完了済みタスクを削除</span>
+                    </v-btn>
+
+                    <v-spacer></v-spacer>
+                    <v-btn icon @click="changeVisible">
+                        <v-icon v-if="change">mdi-eye</v-icon>
+                        <v-icon v-else>mdi-eye-off</v-icon>
+                    </v-btn>
+
+                    <v-btn icon class="tooltip" @click="showTextBox = !showTextBox">
+                        <v-icon>mdi-plus-circle-outline</v-icon>
+                        <span class="description_top">タスクを追加</span>
+                    </v-btn>
+
+                </v-toolbar>
+
+                <v-list two-line>
+                    <v-list-item-group v-model="selected" active-class="black-text">
+
+                        <template v-for="(todo, index) in ToDoList">
+                            <v-list-item :key="todo.todo">
+                                <template v-slot:default="{ active }" v-if="todo.visible">
+                                    <v-checkbox v-model="todo.check" @click.stop></v-checkbox>
+
+                                    <v-list-item-content @click.stop="">
+                                        <v-list-item-title v-text="todo.todo"></v-list-item-title>
+                                    </v-list-item-content>
+
+                                    <v-btn icon @click.stop="edit(index)">
+                                        <v-icon>mdi-square-edit-outline</v-icon>
+                                    </v-btn>
+
+                                    <v-list-item-action>
+                                        <!-- <v-checkbox v-model="active" color="yellow darken-3" :on-icon="'mdi-star'" :off-icon="'mdi-star-outline'" light :off-color="'grey'"></v-checkbox> -->
+                                        <v-checkbox on-icon="mdi-star" off-icon="mdi-star-outline" color="yellow darken-3" v-model="todo.important" light></v-checkbox>
+                                    </v-list-item-action>
+
+                                </template>
+
+
+
+                            </v-list-item>
+                            <v-divider v-if="index < ToDoList.length - 1" :key="index"></v-divider>
+                        </template>
+                    </v-list-item-group>
+
+                    <div v-if="showTextBox">
+                        <input type="text" v-model="inputToDo" @keyup.enter="add">
+                    </div>
+                </v-list>
+            </v-card>
         </v-app>
     </div>
 
@@ -38,34 +87,57 @@
         new Vue({
             el: "#app",
             vuetify: new Vuetify(),
-            delimiters:['[[', ']]'],
+            delimiters: ["[[", "]]"],
             data: {
-                ToDoList: JSON.parse('{{ToDoList | tojson | safe}}'),
-            }
-            methods: {
-                add: function () {
-                    if (this.inputToDo != "") {
-                        this.ToDoList.push({
-                            todo: this.inputToDo,
-                            check: false,
-                            class: "NotComp",
-                            important: false,
+                ToDoList: {{ ToDoList }},
 
-                        })
-                        this.inputToDo = ""
-                    }
-                },
-                remove: function (index) {
-                    this.ToDoList.splice(index, 1)
-                },
-                chageClass: function (index) {
-                    if (!this.ToDoList[index].check) {
-                        this.ToDoList[index].class = "complete"
-                    } else {
-                        this.ToDoList[index].class = "NotComp"
+                inputToDo: "",
+                showTextBox: false,
+                visible: true,
+                change: true,
+
+            },
+        methods: {
+            add: function () {
+                if (this.inputToDo != "") {
+                    this.ToDoList.push({
+                        todo: this.inputToDo,
+                        check: false,
+                        important: false,
+                        visible: true,
+
+                    })
+                this.inputToDo = "",
+                this.showTextBox = false;
+                }
+            },
+            remove: function (index) {
+                this.ToDoList.splice(index, 1)
+            },
+            removeAll: function () {
+                for (var i = 0; i < this.ToDoList.length; i++) {
+                    if (this.ToDoList[i].check) {
+                        this.ToDoList.splice(i, 1);
+                        i--;
                     }
                 }
+            },
+
+            changeVisible: function () {
+                if (this.change) {
+                    for (var i = 0; i < this.ToDoList.length; i++) {
+                        if (this.ToDoList[i].check) {
+                            this.ToDoList[i].visible = false;
+                        }
+                    }
+                } else {
+                    for (var i = 0; i < this.ToDoList.length; i++) {
+                        this.ToDoList[i].visible = true;
+                    }
+                }
+                this.change = !this.change
             }
+        },
 
         })
     </script>
