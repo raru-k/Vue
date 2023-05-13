@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
-    <link href="../static/css/style.css" rel="stylesheet">
+    <link href="../static/CSS/style.css" rel="stylesheet">
 
     <title>todo</title>
 </head>
@@ -16,7 +16,8 @@
 <body>
     <div id="app">
         <v-app>
-            <v-card class="mx-auto" max-width="500">
+
+            <v-card class="mx-auto"max-width="500">
                 <v-toolbar color="dark" dark>
                     <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
@@ -40,14 +41,20 @@
                         <span class="description_top">タスクを追加</span>
                     </v-btn>
 
+                    <form name="myForm" action="/todo-list" method="POST">
+                        <v-btn icon class="tooltip" @click="save"><v-icon>mdi-content-save</v-icon>
+                            <span class="description_top">保存</span
+                        </v-btn>
+                        <input type="hidden" id="tasks" name="tasks" value="">
+                    </form>
+
                 </v-toolbar>
 
                 <v-list two-line>
                     <v-list-item-group v-model="selected" active-class="black-text">
-
                         <template v-for="(todo, index) in ToDoList">
-                            <v-list-item :key="todo.todo">
-                                <template v-slot:default="{ active }" v-if="todo.visible">
+                            <v-list-item :key="todo.todo" v-if="todo.visible"   >
+                                <template v-slot:default="{ active }" >
                                     <v-checkbox v-model="todo.check" @click.stop></v-checkbox>
 
                                     <v-list-item-content @click.stop="">
@@ -59,13 +66,10 @@
                                     </v-btn>
 
                                     <v-list-item-action>
-                                        <!-- <v-checkbox v-model="active" color="yellow darken-3" :on-icon="'mdi-star'" :off-icon="'mdi-star-outline'" light :off-color="'grey'"></v-checkbox> -->
                                         <v-checkbox on-icon="mdi-star" off-icon="mdi-star-outline" color="yellow darken-3" v-model="todo.important" light></v-checkbox>
                                     </v-list-item-action>
 
                                 </template>
-
-
 
                             </v-list-item>
                             <v-divider v-if="index < ToDoList.length - 1" :key="index"></v-divider>
@@ -87,57 +91,70 @@
         new Vue({
             el: "#app",
             vuetify: new Vuetify(),
-            delimiters: ["[[", "]]"],
             data: {
-                ToDoList: {{ ToDoList }},
-
+                selected:null,
+                ToDoList: {{list | safe}},
                 inputToDo: "",
                 showTextBox: false,
-                visible: true,
                 change: true,
+            },
+            delimiters: ["[[","]]"],
+            methods: {
+                save : function () {
+                    var str = "[";
+                    this.ToDoList.forEach(obj => {
+                        str += "{todo:\"" + obj.todo;
+                        str += "\",check:" + obj.check;
+                        str += ",important:" + obj.important;
+                        str += ",visible:" + obj.visible;
+                        str += "},";
+                    });
+                    str += "]";
+                    document.getElementById("tasks").value=str;
+                    document.myForm.submit();
 
-            },
-        methods: {
-            add: function () {
-                if (this.inputToDo != "") {
-                    this.ToDoList.push({
-                        todo: this.inputToDo,
-                        check: false,
-                        important: false,
-                        visible: true,
-
-                    })
-                this.inputToDo = "",
-                this.showTextBox = false;
-                }
-            },
-            remove: function (index) {
-                this.ToDoList.splice(index, 1)
-            },
-            removeAll: function () {
-                for (var i = 0; i < this.ToDoList.length; i++) {
-                    if (this.ToDoList[i].check) {
-                        this.ToDoList.splice(i, 1);
-                        i--;
+                },
+                add: function () {
+                    if (this.inputToDo != "") {
+                        this.ToDoList.push({
+                            todo: this.inputToDo,
+                            check: false,
+                            important: false,
+                            visible: true,
+                        })
+                    this.inputToDo = "",
+                    this.showTextBox = false;
+                    this.save();    
                     }
-                }
-            },
+                },
+                remove: function (index) {
+                    this.ToDoList.splice(index, 1)
 
-            changeVisible: function () {
-                if (this.change) {
+                },
+                removeAll: function () {
                     for (var i = 0; i < this.ToDoList.length; i++) {
                         if (this.ToDoList[i].check) {
-                            this.ToDoList[i].visible = false;
+                            this.ToDoList.splice(i, 1);
+                            i--;
                         }
                     }
-                } else {
-                    for (var i = 0; i < this.ToDoList.length; i++) {
-                        this.ToDoList[i].visible = true;
+                    this.save();
+                },
+                changeVisible: function () {
+                    if (this.change) {
+                        for (var i = 0; i < this.ToDoList.length; i++) {
+                            if (this.ToDoList[i].check) {
+                                this.ToDoList[i].visible = false;
+                            }
+                        }
+                    } else {
+                        for (var i = 0; i < this.ToDoList.length; i++) {
+                            this.ToDoList[i].visible = true;
+                        }
                     }
+                    this.change = !this.change
                 }
-                this.change = !this.change
-            }
-        },
+            },
 
         })
     </script>

@@ -14,18 +14,14 @@
 </head>
 
 <body>
-    {{ ToDoList }}
-    {{ToDoList[1].todo}}
-    <div id="app">
-        <li v-for="(todo, index) in ToDoList" :key="todo.todo">
-            <label>
-                <input type="checkbox" value="index" v-model="todo.check" @click="chageClass(index)">
-                <p :class="todo.class">{{ToDoList[index].todo}}</p>
-            </label>
-            <v-icon @click="remove(index)">mdi-trash-can-outline</v-icon>
+    {{ ToDo }}
+    [[ToDo]] 
+    {% for todo in ToDolist %}
+        <li>{{todo}}</li>
+    {% endfor %}
 
 
-    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script>
@@ -34,9 +30,10 @@
             vuetify: new Vuetify(),
             delimiters: ['[[', ']]'],
             data: {
-                ToDoList: {{ ToDoList }}
+                ToDo: {{ ToDoList | tojson | safe }}
             }
         })
+    </script>
 </body>
 
 </html>
