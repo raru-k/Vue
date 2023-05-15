@@ -15,7 +15,7 @@ def readTxt():
 
 app = Flask(__name__)
 
-@app.route('/todo-list', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def updateToDo():
     
     if request.method == 'POST': # POSTの場合はtxtファイルの中身を更新する
