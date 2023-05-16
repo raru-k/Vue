@@ -5,6 +5,8 @@ def updateTxt(text):
         return
     with open("static/txt/todo.txt","w",encoding="utf-8") as f:
         f.write(text)
+    
+    
 
 def readTxt():
     with open("static/txt/todo.txt","r",encoding="utf-8") as f:
