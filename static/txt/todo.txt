@@ -1,1 +1,1 @@
-[{todo:"どんなSPAか",check:true,important:false,visible:true,memo:""},{todo:"デモ",check:true,important:true,visible:true,memo:""},{todo:"機能紹介",check:true,important:false,visible:true,memo:""},{todo:"今回作ったアプリに使用した技術",check:true,important:false,visible:true,memo:"Vue Vuetify Flask"},]
+[{todo:"どんなSPAか",check:false,important:false,visible:true,memo:""},{todo:"デモ",check:false,important:true,visible:true,memo:""},{todo:"機能紹介",check:false,important:false,visible:true,memo:""},{todo:"今回作ったアプリに使用した技術",check:false,important:false,visible:true,memo:"Vue Vuetify Flask"},]

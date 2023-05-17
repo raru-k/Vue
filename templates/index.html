@@ -1,262 +1,263 @@
-<!DOCTYPE html>
-<html lang="ja">
+    <!DOCTYPE html>
+    <html lang="ja">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
-    <link href="../static/CSS/style.css" rel="stylesheet">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+        <link href="../static/CSS/style.css" rel="stylesheet">
 
-    <title>todo</title>
-</head>
+        <title>todo</title>
+    </head>
 
-<body>
-    <div id="app">
-        <v-app id="inspire">
-            <v-navigation-drawer v-model="drawer" app>
-                <v-sheet color="grey lighten-4" class="pa-4">
-                    <v-avatar class="mb-4" color="grey darken-1" size="64">
-                        <img :src="avatar">
-                    </v-avatar>
+    <body>
+        <div id="app">
+            <v-app id="inspire">
+                <v-navigation-drawer v-model="drawer" app>
+                    <v-sheet color="grey lighten-4" class="pa-4">
+                        <v-avatar class="mb-4" color="grey darken-1" size="64">
+                            <img :src="avatar">
+                        </v-avatar>
 
-                    <div>[[username]]</div>
-                </v-sheet>
+                        <div>[[username]]</div>
+                    </v-sheet>
 
-                <v-divider></v-divider>
+                    <v-divider></v-divider>
+                    
+                    <v-progress-circular :rotate="-90" :value="progress" :size="100" color="primary">
+                        [[progress]]
+                    </v-progress-circular>
                 
-                <v-progress-circular :rotate="-90" :value="progress" :size="100" color="primary">
-                    [[progress]]
-                </v-progress-circular>
-            
-            </v-navigation-drawer>
+                </v-navigation-drawer>
 
-            <v-app-bar app color="dark" dark>
-                <v-app-bar-nav-icon @click="drawer = !drawer" v-if="!drawer"></v-app-bar-nav-icon>
-                <v-btn icon @click="drawer=!drawer" v-else>
-                    <v-icon>mdi-chevron-double-left</v-icon>
-                </v-btn>
+                <v-app-bar app color="dark" dark>
+                    <v-app-bar-nav-icon @click="drawer = !drawer" v-if="!drawer"></v-app-bar-nav-icon>
+                    <v-btn icon @click="drawer=!drawer" v-else>
+                        <v-icon>mdi-chevron-double-left</v-icon>
+                    </v-btn>
 
-                <v-toolbar-title>todo</v-toolbar-title>
+                    <v-toolbar-title>todo</v-toolbar-title>
 
-                <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
 
-                <v-btn icon class="tooltip" @click="removeAll">
-                    <v-icon>mdi-checkbox-marked-circle</v-icon>
-                    <span class="description_top">完了済みタスクを削除</span>
-                </v-btn>
+                    <v-btn icon class="tooltip" @click="removeAll">
+                        <v-icon>mdi-checkbox-marked-circle</v-icon>
+                        <span class="description_top">完了済みタスクを削除</span>
+                    </v-btn>
 
-                <v-btn icon @click="changeVisible">
-                    <v-icon v-if="change">mdi-eye</v-icon>
-                    <v-icon v-else>mdi-eye-off</v-icon>
-                </v-btn>
+                    <v-btn icon @click="changeVisible">
+                        <v-icon v-if="change">mdi-eye</v-icon>
+                        <v-icon v-else>mdi-eye-off</v-icon>
+                    </v-btn>
 
 
 
-                <v-btn icon class="tooltip" @click="showTextBox = !showTextBox">
-                    <v-icon>mdi-plus-circle-outline</v-icon>
-                    <span class="description_top">タスクを追加</span>
-                </v-btn>
+                    <v-btn icon class="tooltip" @click="showTextBox = !showTextBox">
+                        <v-icon>mdi-plus-circle-outline</v-icon>
+                        <span class="description_top">タスクを追加</span>
+                    </v-btn>
 
-                <form name="myForm" action="/" method="POST">
-                    <v-btn icon class="tooltip" @click="save"><v-icon>mdi-content-save</v-icon>
-                        <span class="description_top">保存</span </v-btn>
-                        <input type="hidden" id="tasks" name="tasks" value="">
-                </form>
+                    <form name="myForm" action="/" method="POST">
+                        <v-btn icon class="tooltip" @click="save"><v-icon>mdi-content-save</v-icon>
+                            <span class="description_top">保存</span </v-btn>
+                            <input type="hidden" id="tasks" name="tasks" value="">
+                    </form>
 
 
 
-            </v-app-bar>
+                </v-app-bar>
 
-            <v-main>
-                <v-container class="py-8 px-6" fluid>
-                    <v-row>
-                        <v-col cols="12">
+                <v-main>
+                    <v-container class="py-8 px-6" fluid>
+                        <v-row>
+                            <v-col cols="12">
 
-                            <v-card>
+                                <v-card>
 
-                                <v-list two-line>
-                                    <v-list-item-group v-model="selected" active-class="black-text">
-                                        <template v-for="(todo, index) in ToDoList">
-                                            <v-list-item :key="todo.todo" v-if="todo.visible">
-                                                <template v-slot:default="{ active }">
-                                                    <v-checkbox v-model="todo.check" @click.stop></v-checkbox>
+                                    <v-list two-line>
+                                        <v-list-item-group v-model="selected" active-class="black-text">
+                                            <template v-for="(todo, index) in ToDoList">
+                                                <v-list-item :key="todo.todo" v-if="todo.visible">
+                                                    <template v-slot:default="{ active }">
+                                                        <v-checkbox v-model="todo.check" @click.stop></v-checkbox>
 
-                                                    <v-list-item-content @click.stop="" v-if="editingIndex !== index">
-                                                        <v-list-item-title v-text="todo.todo"></v-list-item-title>
-                                                        <v-list-item-subtitle v-text="todo.memo"></v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                    <v-text-field v-model="ToDoList[index].memo" v-else @keyup.enter="saveEdit" placeholder="memo"></v-text-field>
-                                                    
-                                                    <v-btn icon class="tooltip" @click.stop="editingIndex = index">
-                                                        <v-icon>mdi-square-edit-outline</v-icon>
-                                                        <span class="description_top">メモを追加</span>
-                                                    </v-btn>
-                                                    
+                                                        <v-list-item-content @click.stop="" v-if="editingIndex !== index">
+                                                            <v-list-item-title v-text="todo.todo"></v-list-item-title>
+                                                            <v-list-item-subtitle v-text="todo.memo"></v-list-item-subtitle>
+                                                        </v-list-item-content>
 
-                                                    <v-btn icon class="tooltip" @click.stop="remove(index)">
-                                                        <v-icon>mdi-delete-outline</v-icon>
-                                                        <span class="description_top">削除</span>
-                                                    </v-btn>
+                                                        <v-text-field v-model="ToDoList[index].memo" v-else @keyup.enter="saveEdit" placeholder="memo"></v-text-field>
+                                                        
+                                                        <v-btn icon class="tooltip" @click.stop="editingIndex = index">
+                                                            <v-icon>mdi-square-edit-outline</v-icon>
+                                                            <span class="description_top">メモを追加</span>
+                                                        </v-btn>
+                                                        
 
-                                                    <v-list-item-action>
-                                                        <v-checkbox on-icon="mdi-star" off-icon="mdi-star-outline" color="yellow darken-3" v-model="todo.important" light>
-                                                        </v-checkbox>
-                                                    </v-list-item-action>
+                                                        <v-btn icon class="tooltip" @click.stop="remove(index)">
+                                                            <v-icon>mdi-delete-outline</v-icon>
+                                                            <span class="description_top">削除</span>
+                                                        </v-btn>
 
-                                                </template>
+                                                        <v-list-item-action>
+                                                            <v-checkbox on-icon="mdi-star" off-icon="mdi-star-outline" color="yellow darken-3" v-model="todo.important" light>
+                                                            </v-checkbox>
+                                                        </v-list-item-action>
 
-                                            </v-list-item>
-                                            <v-divider v-if="index < ToDoList.length" :key="index"></v-divider>
-                                        </template>
-                                    </v-list-item-group>
+                                                    </template>
 
-                                    <v-text-field ref="todoInput" v-model="inputToDo" @keyup.enter="add" v-if="showTextBox" placeholder="タスクを入力"></v-text-field>
-                                </v-list>
-                            </v-card>
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-main>
-            <div class="v-application">
-                <a :href="URL" target="_blank" class="v-btn v-btn--bottom v-btn--is-elevated v-btn--fab v-btn--fixed v-btn--has-bg v-btn--right v-btn--round theme--light v-size--default primary" rel="noopener"><span class="v-btn__content"><span aria-hidden="true" class="v-icon notranslate theme--light">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon__svg">
-                                <path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z"></path>
-                            </svg>
+                                                </v-list-item>
+                                                <v-divider v-if="index < ToDoList.length" :key="index"></v-divider>
+                                            </template>
+                                        </v-list-item-group>
+
+                                        <v-text-field ref="todoInput" v-model="inputToDo" @keyup.enter="add" v-if="showTextBox" placeholder="タスクを入力"></v-text-field>
+                                    </v-list>
+                                </v-card>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-main>
+                <div class="v-application">
+                    <a :href="URL" target="_blank" class="v-btn v-btn--bottom v-btn--is-elevated v-btn--fab v-btn--fixed v-btn--has-bg v-btn--right v-btn--round theme--light v-size--default primary" rel="noopener"><span class="v-btn__content"><span aria-hidden="true" class="v-icon notranslate theme--light">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true" class="v-icon__svg">
+                                    <path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z"></path>
+                                </svg>
+                            </span>
+                        </span>
+                    </a>
+                    <span class="v-btn__content">
+                        <span aria-hidden="true" class="v-icon notranslate theme --light">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" class="v-icon__svg"></svg>
                         </span>
                     </span>
-                </a>
-                <span class="v-btn__content">
-                    <span aria-hidden="true" class="v-icon notranslate theme --light">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" class="v-icon__svg"></svg>
-                    </span>
-                </span>
-            </div>
-        </v-app>
+                </div>
+            </v-app>
 
-    </div>
+        </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
 
-    <script>
-        new Vue({
-            el: "#app",
-            vuetify: new Vuetify(),
-            data: {
-                selected: null,
-                ToDoList: {{ list | safe}},
-                inputToDo: "",
-                showTextBox: false,
-                change: true,
-                drawer : true,
-                editingIndex: -1,
-                avatar:"../static/img/icon.jpg",
-                URL:"https://github.com/raru-k/Vue",
-                username: "raru-k"
-            },
-            delimiters: ["[[", "]]"],
-            watch:{
-                showTextBox(newValue){
-                    if(newValue){
-                        this.$nextTick(() => {
-                            this.$refs.todoInput.focus();
-                        })
-                    }
-                }
-            },
-            computed:{
-                CompleteCount: function () {
-                    var count = 0;
-                    this.ToDoList.forEach(obj => {
-                        if(obj.check) count++;
-                    });
-                    return count;
+        <script>
+            new Vue({
+                el: "#app",
+                vuetify: new Vuetify(),
+                data: {
+                    selected: null,
+                    ToDoList: {{ list | safe}},
+                    inputToDo: "",
+                    showTextBox: false,
+                    change: true,
+                    drawer : true,
+                    editingIndex: -1,
+                    avatar:"../static/img/icon.jpg",
+                    URL:"https://github.com/raru-k/Vue",
+                    username: "raru-k"
                 },
-                progress: function () {
-                    var count = 0;
-                    var totalItems = this.ToDoList.length;
-                    
-                    if (totalItems === 0) {
-                      return 0; // 分母が0の場合、進捗は0
+                delimiters: ["[[", "]]"],
+                watch:{
+                    showTextBox(newValue){
+                        if(newValue){
+                            this.$nextTick(() => {
+                                this.$refs.todoInput.focus();
+                            })
+                        }
                     }
+                },
+                computed:{
+                    CompleteCount: function () {
+                        var count = 0;
+                        this.ToDoList.forEach(obj => {
+                            if(obj.check) count++;
+                        });
+                        return count;
+                    },
+                    progress: function () {
+                        var count = 0;
+                        var totalItems = this.ToDoList.length;
+                        
+                        if (totalItems === 0) {
+                        return 0; // 分母が0の場合、進捗は0
+                        }
 
-                    if(this.CompleteCount == totalItems){
-                        return "Compuleted!"
-                    }else{
-                        return Math.round((this.CompleteCount / totalItems) * 100);
+                        if(this.CompleteCount == totalItems){
+                            return "Compuleted!"
+                        }else{
+                            return Math.round((this.CompleteCount / totalItems) * 100);
+                        }
                     }
-                }
-            },
-            methods: {
-            save: function () {
-                var str = "[";
-                this.ToDoList.forEach(obj => {
-                    str += "{todo:\"" + obj.todo;
-                    str += "\",check:" + obj.check;
-                    str += ",important:" + obj.important;
-                    str += ",visible:" + obj.visible;
-                    str += ",memo:\"" + obj.memo;
-                    str += "\"},";
-                });
-                str += "]";
-    
-                document.getElementById("tasks").value = str;
-                document.myForm.submit();
+                },
+                methods: {
+                save: function () {
+                    var str = "[";
+                    this.ToDoList.forEach(obj => {
+                        str += "{todo:\"" + obj.todo;
+                        str += "\",check:" + obj.check;
+                        str += ",important:" + obj.important;
+                        str += ",visible:" + obj.visible;
+                        str += ",memo:\"" + obj.memo;
+                        str += "\"},";
+                    });
+                    str += "]";
+        
+                    document.getElementById("tasks").value = str;
+                    document.myForm.submit();
 
-            },
-            add: function () {
-                if (this.inputToDo != "") {
-                    this.ToDoList.push({
-                        todo: this.inputToDo,
-                        check: false,
-                        important: false,
-                        visible: true,
-                        memo: ""
-                    })
-                    this.inputToDo = "",
-                        this.showTextBox = false;
+                },
+                add: function () {
+                    if (this.inputToDo != "") {
+                        this.ToDoList.push({
+                            todo: this.inputToDo,
+                            check: false,
+                            important: false,
+                            visible: true,
+                            memo: ""
+                        })
+                        this.inputToDo = "",
+                            this.showTextBox = false;
+                        this.save();
+                    }
+                },
+                remove: function (index) {
+                    this.ToDoList.splice(index, 1)
+                    this.save();
+
+                },
+                removeAll: function () {
+                    for (var i = 0; i < this.ToDoList.length; i++) {
+                        if (this.ToDoList[i].check) {
+                            this.ToDoList.splice(i, 1);
+                            i--;
+                        }
+                    }
+                    this.save();
+                },
+                changeVisible: function () {
+                    if (this.change) {
+                        for (var i = 0; i < this.ToDoList.length; i++) {
+                            if (this.ToDoList[i].check) {
+                                this.ToDoList[i].visible = false;
+                            }
+                        }
+                    } else {
+                        for (var i = 0; i < this.ToDoList.length; i++) {
+                            this.ToDoList[i].visible = true;
+                        }
+                    }
+                    this.change = !this.change
+                },
+                saveEdit(){
+                    this.editingIndex = -1;
                     this.save();
                 }
             },
-            remove: function (index) {
-                this.ToDoList.splice(index, 1)
-                this.save();
 
-            },
-            removeAll: function () {
-                for (var i = 0; i < this.ToDoList.length; i++) {
-                    if (this.ToDoList[i].check) {
-                        this.ToDoList.splice(i, 1);
-                        i--;
-                    }
-                }
-                this.save();
-            },
-            changeVisible: function () {
-                if (this.change) {
-                    for (var i = 0; i < this.ToDoList.length; i++) {
-                        if (this.ToDoList[i].check) {
-                            this.ToDoList[i].visible = false;
-                        }
-                    }
-                } else {
-                    for (var i = 0; i < this.ToDoList.length; i++) {
-                        this.ToDoList[i].visible = true;
-                    }
-                }
-                this.change = !this.change
-            },
-            saveEdit(){
-                this.editingIndex = -1;
-                this.save();
-            }
-        },
+            })
+        </script>
+    </body>
 
-        })
-    </script>
-</body>
-
-</html>
+    </html>
