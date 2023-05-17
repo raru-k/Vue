@@ -22,7 +22,7 @@
                         <img :src="avatar">
                     </v-avatar>
 
-                    <div>user</div>
+                    <div>[[username]]</div>
                 </v-sheet>
 
                 <v-divider></v-divider>
@@ -90,18 +90,20 @@
                                                     </v-list-item-content>
                                                     <v-text-field v-model="ToDoList[index].memo" v-else @keyup.enter="saveEdit" placeholder="memo"></v-text-field>
                                                     
-                                                    <v-btn icon @click.stop="editingIndex = index">
+                                                    <v-btn icon class="tooltip" @click.stop="editingIndex = index">
                                                         <v-icon>mdi-square-edit-outline</v-icon>
+                                                        <span class="description_top">メモを追加</span>
                                                     </v-btn>
+                                                    
 
-                                                    <v-btn icon @click.stop="remove(index)">
+                                                    <v-btn icon class="tooltip" @click.stop="remove(index)">
                                                         <v-icon>mdi-delete-outline</v-icon>
+                                                        <span class="description_top">削除</span>
                                                     </v-btn>
 
                                                     <v-list-item-action>
-                                                        <v-checkbox on-icon="mdi-star" off-icon="mdi-star-outline"
-                                                            color="yellow darken-3" v-model="todo.important"
-                                                            light></v-checkbox>
+                                                        <v-checkbox on-icon="mdi-star" off-icon="mdi-star-outline" color="yellow darken-3" v-model="todo.important" light>
+                                                        </v-checkbox>
                                                     </v-list-item-action>
 
                                                 </template>
@@ -151,8 +153,9 @@
                 change: true,
                 drawer : true,
                 editingIndex: -1,
-                avatar:"../static/img/icon.png",
-                URL:"https://github.com/raru-k/Vue"
+                avatar:"../static/img/icon.jpg",
+                URL:"https://github.com/raru-k/Vue",
+                username: "raru-k"
             },
             delimiters: ["[[", "]]"],
             watch:{
@@ -177,10 +180,14 @@
                     var totalItems = this.ToDoList.length;
                     
                     if (totalItems === 0) {
-                      return 0; // 分母が0の場合、進捗は0とします
+                      return 0; // 分母が0の場合、進捗は0
                     }
-                    
-                    return Math.round((this.CompleteCount / totalItems) * 100);
+
+                    if(this.CompleteCount == totalItems){
+                        return "Compuleted!"
+                    }else{
+                        return Math.round((this.CompleteCount / totalItems) * 100);
+                    }
                 }
             },
             methods: {
